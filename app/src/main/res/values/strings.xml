@@ -1,3 +1,12 @@
 <resources>
     <string name="app_name">mavExchange</string>
+
+
+    <string name="home"></string>
+    <string name="message"></string>
+    <string name="add"></string>
+    <string name="favorite"></string>
+    <string name="profile"></string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
