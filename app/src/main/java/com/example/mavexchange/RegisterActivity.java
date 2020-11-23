@@ -18,6 +18,9 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -30,6 +33,7 @@ public class RegisterActivity extends AppCompatActivity {
 
     public static final String TAG = "TAG";
     EditText full_name;
+    EditText user_name;
     EditText password_id;
     EditText email_id;
     EditText confirm_password_id;
@@ -38,6 +42,7 @@ public class RegisterActivity extends AppCompatActivity {
     FirebaseAuth fAuth;
     FirebaseFirestore fStore;
     String userID;
+    DatabaseReference reference;
 
     String Email_Pattern = "[a-zA-Z0-9]+\\.+[a-zA-Z0-9]+@[mavs]+\\.+[uta]+\\.+[edu]+";
 
@@ -47,6 +52,7 @@ public class RegisterActivity extends AppCompatActivity {
         setContentView(R.layout.activity_register);
 
         full_name = (EditText) findViewById(R.id.full_name);
+        user_name = (EditText) findViewById(R.id.user_name);
         email_id = (EditText) findViewById(R.id.email_id);
 
         password_id = (EditText) findViewById(R.id.password_id);
@@ -84,12 +90,17 @@ public class RegisterActivity extends AppCompatActivity {
     }
     private void Register(){
         final String name = full_name.getText().toString().trim();
+        final String username = user_name.getText().toString().trim();
         final String email = email_id.getText().toString().trim();
         final String password = password_id.getText().toString().trim();
         String confirm_password = confirm_password_id.getText().toString().trim();
 
         if(TextUtils.isEmpty(name)){
             full_name.setError("Name is Required.");
+            return;
+        }
+        if(TextUtils.isEmpty(username)){
+            full_name.setError("User name is Required.");
             return;
         }
         if(TextUtils.isEmpty(email)){
@@ -140,6 +151,32 @@ public class RegisterActivity extends AppCompatActivity {
                                         Log.d(TAG, "onSuccess: Profile has been created for "+ userID);
                                     }
                                 });
+
+
+                                FirebaseUser firebaseUser = fAuth.getCurrentUser();
+                                String userid = firebaseUser.getUid();
+
+                                reference = FirebaseDatabase.getInstance().getReference().child("Users").child(userid);
+
+                                HashMap<String, Object> hashMap = new HashMap<>();
+                                hashMap.put("id", userid);
+                                hashMap.put("username", username.toLowerCase());
+                                hashMap.put("fullname", name);
+                                hashMap.put("email_id", email);
+                                hashMap.put("imageurl", "https://firebasestorage.googleapis.com/v0/b/mavexchange-68d5e.appspot.com/o/placeholder.png?alt=media&token=f08cc1cf-cda9-4bca-94bb-b50c7c7bf86c");
+
+                                reference.setValue(hashMap).addOnCompleteListener((new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        if (task.isSuccessful()) {
+
+                                            Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
+                                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                                        }
+                                    }
+                                }));
+
+
                             }
                             else{
                                 Toast.makeText(RegisterActivity.this, "Sign Up failed !"+ task.getException().getMessage(), Toast.LENGTH_SHORT).show();
