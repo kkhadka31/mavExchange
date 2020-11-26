@@ -32,7 +32,7 @@ import Model.Post;
 public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
 
     public Context mContext;
-    public List<Post> mPost;
+    public List<Model.Post> mPost;
 
     private FirebaseUser firebaseUser;
 
@@ -52,7 +52,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
 
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-        Post post = mPost.get(i);
+        Model.Post post = mPost.get(i);
 
         Glide.with(mContext).load(post.getPostimage()).into(viewHolder.post_image);
 
@@ -71,15 +71,25 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
         }
 
         publisherInfo(viewHolder.image_profile, viewHolder.user_name, viewHolder.publisher, post.getPublisher());
-
         getComments(post.getPostid(), viewHolder.comments);
+
+
+        viewHolder.comment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(mContext, CommentsActivity.class);
+                intent.putExtra("post", post.getPostid());
+                intent.putExtra("publisher", post.getPublisher());
+                mContext.startActivity(intent);
+            }
+        });
 
         viewHolder.comments.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(View v) {
                 Intent intent = new Intent(mContext, CommentsActivity.class);
-                intent.putExtra("postid", post.getPostid());
-                intent.putExtra("publisherid", post.getPublisher());
+                intent.putExtra("post", post.getPostid());
+                intent.putExtra("publisher", post.getPublisher());
                 mContext.startActivity(intent);
             }
         });
@@ -112,16 +122,17 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
     }
 
 
-    private void getComments(String postId, final TextView comments){
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Comments").child(postId);
+    private void getComments(String postid, TextView comments){
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Comments").child(postid);
+
         reference.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 comments.setText("View All "+dataSnapshot.getChildrenCount()+" Comments");
             }
 
             @Override
-            public void onCancelled(DatabaseError databaseError) {
+            public void onCancelled(@NonNull DatabaseError error) {
 
             }
         });
