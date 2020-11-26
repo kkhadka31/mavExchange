@@ -3,7 +3,6 @@ package com.example.mavexchange;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -12,7 +11,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.firebase.auth.FirebaseAuth;
 
 public class HomeActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
     Button logout;
@@ -57,9 +55,8 @@ public class HomeActivity extends AppCompatActivity implements BottomNavigationV
                 break;
 
             case R.id.add:
-                frag = new addFragment();
-                Toast toast3 = Toast.makeText(getApplicationContext(), "Welcome to add post page", Toast.LENGTH_SHORT);
-                toast3.show();
+                frag = null;
+                startActivity(new Intent(HomeActivity.this, PostActivity.class));
                 break;
 
             case R.id.favorite:
