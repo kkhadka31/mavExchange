@@ -42,12 +42,12 @@ public class HomeFragment extends Fragment {
         postAdapter = new PostAdapter(getContext(), postList);
         recyclerView.setAdapter(postAdapter);
 
-        checkFollowing();
+        checkUsers();
 
         return view;
     }
 
-    private void checkFollowing(){
+    private void checkUsers(){
         userList = new ArrayList<>();
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
                // .child(FirebaseAuth.getInstance().getCurrentUser().getUid())

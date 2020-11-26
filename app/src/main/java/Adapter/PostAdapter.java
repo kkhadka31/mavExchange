@@ -1,6 +1,7 @@
 package Adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.mavexchange.CommentsActivity;
 import com.example.mavexchange.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -58,7 +60,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
             viewHolder.title.setVisibility((View.GONE));
         } else {
             viewHolder.title.setVisibility(View.VISIBLE);
-            viewHolder.title.setText(post.getDescription());
+            viewHolder.title.setText(post.getTitle());
         }
 
         if(post.getDescription().equals("")){
@@ -70,6 +72,18 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
 
         publisherInfo(viewHolder.image_profile, viewHolder.user_name, viewHolder.publisher, post.getPublisher());
 
+        getComments(post.getPostid(), viewHolder.comments);
+
+        viewHolder.comments.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(mContext, CommentsActivity.class);
+                intent.putExtra("postid", post.getPostid());
+                intent.putExtra("publisherid", post.getPublisher());
+                mContext.startActivity(intent);
+            }
+        });
+
     }
 
     @Override
@@ -80,7 +94,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
     public class ViewHolder extends RecyclerView.ViewHolder{
 
         public ImageView image_profile, post_image, comment, save;
-        public TextView user_name, title, description, comments, publisher, favorites;
+        public TextView user_name, title, description, comments, publisher;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -90,13 +104,29 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
             comments = itemView.findViewById(R.id.comments);
             save = itemView.findViewById(R.id.save);
             comment = itemView.findViewById(R.id.comment);
-            favorites = itemView.findViewById(R.id.favorites);
             user_name = itemView.findViewById(R.id.user_name);
             publisher = itemView.findViewById(R.id.publisher);
             title = itemView.findViewById(R.id.title);
             description = itemView.findViewById(R.id.description);
         }
     }
+
+
+    private void getComments(String postId, final TextView comments){
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Comments").child(postId);
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                comments.setText("View All "+dataSnapshot.getChildrenCount()+" Comments");
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
 
     private void publisherInfo(final ImageView image_profile, final TextView user_name, final TextView publisher, final String userid){
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference()

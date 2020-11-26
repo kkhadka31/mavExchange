@@ -27,9 +27,8 @@
             <de.hdodenhof.circleimageview.CircleImageView
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:id="@+id/image_profile"
                 android:layout_margin="10dp"
-                android:src="@mipmap/ic_launcher"/>
+                android:id="@+id/image_profile"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -38,7 +37,6 @@
                 android:layout_gravity="center_vertical"
                 android:textSize="16sp"
                 android:textStyle="bold"
-                android:text="username"
                 android:textColor="@color/black"/>
 
         </LinearLayout>
@@ -52,8 +50,7 @@
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/post_image"
-            android:src="@mipmap/ic_launcher"/>
+            android:id="@+id/post_image"/>
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -73,17 +70,7 @@
                 android:id="@+id/save"
                 android:src="@drawable/ic_favorite"
                 android:layout_alignParentEnd="true"/>
-
         </RelativeLayout>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:textStyle="bold"
-            android:id="@+id/favorites"
-            android:text="10 favorites"
-            android:textColor="@color/black"/>
 
 
         <TextView
@@ -92,7 +79,6 @@
             android:layout_marginStart="8dp"
             android:textStyle="bold"
             android:id="@+id/publisher"
-            android:text="username"
             android:textColor="@color/black"/>
 
         <TextView
@@ -100,25 +86,23 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:id="@+id/title"
-            android:text="title"
-            android:textColor="@color/colorPrimaryDark"/>
+            android:textColor="@color/black"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:id="@+id/description"
-            android:text="description"
             android:textColor="@color/colorPrimaryDark"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="View All 20 Comments"
             android:layout_marginStart="8dp"
             android:layout_marginTop="5dp"
-            android:id="@+id/comments"
             android:layout_marginBottom="10dp"
+            android:id="@+id/comments"
+            android:text="View All 20 Comments"
             android:textColor="@color/colorAccent"/>
 
     </LinearLayout>
