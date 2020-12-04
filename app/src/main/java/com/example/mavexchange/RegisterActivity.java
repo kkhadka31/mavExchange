@@ -30,6 +30,7 @@ public class RegisterActivity extends AppCompatActivity {
 
     public static final String TAG = "TAG";
     EditText full_name;
+    EditText user_name;
     EditText password_id;
     EditText email_id;
     EditText confirm_password_id;
@@ -47,6 +48,7 @@ public class RegisterActivity extends AppCompatActivity {
         setContentView(R.layout.activity_register);
 
         full_name = (EditText) findViewById(R.id.full_name);
+        user_name = (EditText) findViewById(R.id.user_name);
         email_id = (EditText) findViewById(R.id.email_id);
 
         password_id = (EditText) findViewById(R.id.password_id);
@@ -84,12 +86,17 @@ public class RegisterActivity extends AppCompatActivity {
     }
     private void Register(){
         final String name = full_name.getText().toString().trim();
+        final String username = user_name.getText().toString().trim();
         final String email = email_id.getText().toString().trim();
         final String password = password_id.getText().toString().trim();
         String confirm_password = confirm_password_id.getText().toString().trim();
 
         if(TextUtils.isEmpty(name)){
             full_name.setError("Name is Required.");
+            return;
+        }
+        if(TextUtils.isEmpty(username)){
+            user_name.setError("User name is Required.");
             return;
         }
         if(TextUtils.isEmpty(email)){
@@ -130,11 +137,14 @@ public class RegisterActivity extends AppCompatActivity {
                             if(task.isSuccessful()) {
                                 Toast.makeText(RegisterActivity.this, "Successfully Registered. Please check your email for verification", Toast.LENGTH_SHORT).show();
                                 userID = fAuth.getCurrentUser().getUid();
-                                DocumentReference documentReference = fStore.collection("users").document(userID);
-                                Map<String, Object> user = new HashMap<>();
-                                user.put("full_name", name);
-                                user.put("email_id", email);
-                                documentReference.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                DocumentReference documentReference = fStore.collection("Users").document(userID);
+                                Map<String, Object> hashMap = new HashMap<>();
+                                hashMap.put("id", userID);
+                                hashMap.put("username", username.toLowerCase());
+                                hashMap.put("fullname", name);
+                                hashMap.put("email_id", email);
+                                hashMap.put("imageurl", "https://firebasestorage.googleapis.com/v0/b/mavexchange-68d5e.appspot.com/o/placeholder.png?alt=media&token=f08cc1cf-cda9-4bca-94bb-b50c7c7bf86c");
+                                documentReference.set(hashMap).addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override
                                     public void onSuccess(Void aVoid) {
                                         Log.d(TAG, "onSuccess: Profile has been created for "+ userID);
